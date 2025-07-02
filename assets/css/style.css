@@ -850,51 +850,7 @@ h6 {
   }
 }
 
-.navbar-mobile {
-  position: fixed;
-  overflow: hidden;
-  top: 0;
-  right: 0;
-  left: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.9);
-  transition: 0.3s;
-  z-index: 999;
-  margin-top: 0;
-}
 
-.navbar-mobile .mobile-nav-toggle {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-}
-
-.navbar-mobile ul {
-  display: block;
-  position: absolute;
-  top: 55px;
-  right: 15px;
-  bottom: 45px;
-  left: 15px;
-  padding: 10px 0;
-  overflow-y: auto;
-  transition: 0.3s;
-  border: 2px solid rgba(255, 255, 255, 0.2);
-}
-
-.navbar-mobile li {
-  padding: 12px 20px;
-}
-
-.navbar-mobile li+li {
-  margin: 0;
-}
-
-.navbar-mobile a,
-.navbar-mobile a:focus {
-  font-size: 16px;
-  position: relative;
-}
 
 /*--------------------------------------------------------------
 # Sections General
@@ -1415,12 +1371,24 @@ section .container {
 .portfolio-item {
   margin-bottom: 30px;
   display: flex;
+  height: auto;
 }
 
 .portfolio-item .modern-portfolio-card {
   width: 100%;
   display: flex;
   flex-direction: column;
+  height: 100%;
+}
+
+/* Better alignment for single cards */
+.portfolio-container.justify-content-center {
+  justify-content: center;
+}
+
+.portfolio-container.justify-content-center .portfolio-item {
+  max-width: 400px;
+  margin: 0 auto;
 }
 
 .modern-portfolio-card {
@@ -1431,7 +1399,6 @@ section .container {
   transition: all 0.3s ease;
   height: 100%;
   min-height: 320px;
-  max-height: 320px;
   margin-bottom: 30px;
   backdrop-filter: blur(10px);
   position: relative;
@@ -1533,6 +1500,7 @@ section .container {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  justify-content: space-between;
 }
 
 .card-header {
@@ -1596,7 +1564,15 @@ section .container {
 }
 
 .card-description {
-  display: none;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 12px 0;
+  flex: 1;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
 }
 
 .card-actions {
@@ -2773,128 +2749,6 @@ section .container {
 # Mobile Navigation Improvements
 --------------------------------------------------------------*/
 
-.navbar-mobile {
-  position: fixed;
-  overflow: hidden;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.6);
-  transition: 0.3s;
-  z-index: 9994;
-  backdrop-filter: blur(10px);
-}
-
-.navbar-mobile .mobile-nav-toggle {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  z-index: 9995;
-}
-
-.navbar-mobile ul {
-  display: block;
-  position: absolute;
-  top: 55px;
-  right: 15px;
-  bottom: 15px;
-  left: 15px;
-  padding: 10px 0;
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  border-radius: 10px;
-  background-color: rgba(0, 0, 0, 0.8);
-  overflow-y: auto;
-  transition: 0.3s;
-}
-
-.navbar-mobile li {
-  padding: 0;
-  margin: 0;
-}
-
-.navbar-mobile li+li {
-  margin: 0;
-}
-
-.navbar-mobile a,
-.navbar-mobile a:focus {
-  padding: 10px 20px;
-  font-size: 15px;
-  color: rgba(255, 255, 255, 0.7);
-  font-weight: 600;
-  outline: none;
-  display: block;
-  transition: 0.3s;
-  border-radius: 5px;
-  margin: 5px 10px;
-}
-
-.navbar-mobile a:hover,
-.navbar-mobile .active,
-.navbar-mobile li:hover>a {
-  color: #fff;
-  background: rgba(176, 118, 181, 0.2);
-  border-left: 3px solid #b076b5;
-}
-
-.navbar-mobile a:before {
-  display: none;
-}
-
-.navbar-mobile .getstarted,
-.navbar-mobile .getstarted:focus {
-  margin: 15px;
-  padding: 10px 20px;
-  border-radius: 4px;
-  color: #fff;
-  background: #b076b5;
-}
-
-.navbar-mobile .getstarted:hover,
-.navbar-mobile .getstarted:focus:hover {
-  color: #fff;
-  background: #c084fc;
-}
-
-.navbar-mobile .dropdown ul {
-  position: static;
-  display: none;
-  margin: 10px 20px;
-  padding: 10px 0;
-  z-index: 99;
-  height: auto;
-  width: auto;
-  background: rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 5px;
-}
-
-.navbar-mobile .dropdown ul li {
-  padding: 0;
-  margin: 0;
-}
-
-.navbar-mobile .dropdown ul a {
-  padding: 10px 20px;
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.6);
-}
-
-.navbar-mobile .dropdown ul a i,
-.navbar-mobile .dropdown ul a:focus i {
-  font-size: 12px;
-  margin-left: 5px;
-}
-
-.navbar-mobile .dropdown ul a:hover,
-.navbar-mobile .dropdown ul .active:hover,
-.navbar-mobile .dropdown ul li:hover>a {
-  color: #fff;
-  background: rgba(176, 118, 181, 0.1);
-}
-
-.navbar-mobile .dropdown>.dropdown-active {
-  display: block;
-}
-
 /* Mobile nav toggle animation */
 .mobile-nav-toggle {
   transition: all 0.3s ease;
@@ -2920,16 +2774,7 @@ section .container {
 }
 
 /* Mobile nav inactive state */
-.navbar-mobile {
-  visibility: hidden;
-  opacity: 0;
-}
 
-.navbar-mobile ul {
-  transform: translateY(-20px);
-  opacity: 0;
-  transition: all 0.3s ease;
-}
 
 /*--------------------------------------------------------------
 # Touch-Friendly Improvements
@@ -3181,17 +3026,7 @@ img {
 }
 
 /* Enhanced mobile navigation */
-@media (max-width: 991px) {
-  .navbar-mobile {
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-  }
-  
-  .navbar-mobile ul {
-    background: rgba(0, 0, 0, 0.9);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-  }
-}
+
 
 /* Better touch feedback */
 @media (hover: none) and (pointer: coarse) {
@@ -3332,5 +3167,41 @@ img {
   .animate-fade-in-left,
   .animate-fade-in-right {
     animation-duration: 0.4s;
+  }
+  
+  /* Better mobile alignment for portfolio cards */
+  .modern-portfolio-card {
+    margin-bottom: 20px;
+    min-height: 280px;
+  }
+  
+  .card-image {
+    height: 140px;
+  }
+  
+  .card-content {
+    padding: 15px;
+  }
+  
+  .card-header h4 {
+    font-size: 15px;
+  }
+  
+  .card-description {
+    font-size: 13px;
+  }
+  
+  .btn-action {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+  
+  /* Better mobile alignment for single cards */
+  .portfolio-container.justify-content-center {
+    justify-content: center !important;
+  }
+  
+  .portfolio-container.justify-content-center .portfolio-item {
+    max-width: 100%;
   }
 }

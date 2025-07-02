@@ -318,6 +318,30 @@
         });
       }, true);
     }
+
+    // Personal Projects Portfolio
+    let personalPortfolioContainer = select('#personal-projects .portfolio-container');
+    if (personalPortfolioContainer) {
+      let personalPortfolioIsotope = new Isotope(personalPortfolioContainer, {
+        itemSelector: '.portfolio-item',
+        layoutMode: 'fitRows',
+        transitionDuration: '0.4s'
+      });
+
+      let personalPortfolioFilters = select('#personal-projects-flters li', true);
+
+      on('click', '#personal-projects-flters li', function(e) {
+        e.preventDefault();
+        personalPortfolioFilters.forEach(function(el) {
+          el.classList.remove('filter-active');
+        });
+        this.classList.add('filter-active');
+
+        personalPortfolioIsotope.arrange({
+          filter: this.getAttribute('data-filter')
+        });
+      }, true);
+    }
   });
 
   /**
