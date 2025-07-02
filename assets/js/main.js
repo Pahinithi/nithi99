@@ -50,47 +50,46 @@
   }
 
   /**
-   * Enhanced Mobile nav toggle with better UX
+   * Hamburger menu toggle (robust, works on all pages)
    */
-  on('click', '.mobile-nav-toggle', function(e) {
-    e.preventDefault()
-    const navbar = select('#navbar')
-    const body = document.body
-    
-    // Toggle mobile nav
-    navbar.classList.toggle('navbar-mobile')
-    body.classList.toggle('mobile-nav-active')
-    
-    // Toggle icon
-    this.classList.toggle('bi-list')
-    this.classList.toggle('bi-x')
-    
-    // Prevent body scroll when mobile nav is open
-    if (navbar.classList.contains('navbar-mobile')) {
-      body.style.overflow = 'hidden'
-    } else {
-      body.style.overflow = ''
-    }
-  })
+  document.addEventListener('DOMContentLoaded', function() {
+    const drawer = document.getElementById('side-drawer');
+    const backdrop = document.getElementById('drawer-backdrop');
+    const toggle = document.querySelector('.mobile-nav-toggle');
+    const icon = toggle.querySelector('span');
+    const navLinks = drawer.querySelectorAll('.nav-link');
 
-  /**
-   * Close mobile nav when clicking outside
-   */
-  document.addEventListener('click', function(e) {
-    const navbar = select('#navbar')
-    const mobileToggle = select('.mobile-nav-toggle')
-    
-    if (navbar.classList.contains('navbar-mobile') && 
-        !navbar.contains(e.target) && 
-        !mobileToggle.contains(e.target)) {
-      navbar.classList.remove('navbar-mobile')
-      document.body.classList.remove('mobile-nav-active')
-      document.body.style.overflow = ''
-      
-      mobileToggle.classList.remove('bi-x')
-      mobileToggle.classList.add('bi-list')
+    function openDrawer() {
+      drawer.classList.add('open');
+      backdrop.classList.add('open');
+      icon.classList.remove('bi-list');
+      icon.classList.add('bi-x');
+      document.body.style.overflow = 'hidden';
     }
-  })
+    function closeDrawer() {
+      drawer.classList.remove('open');
+      backdrop.classList.remove('open');
+      icon.classList.remove('bi-x');
+      icon.classList.add('bi-list');
+      document.body.style.overflow = '';
+    }
+
+    toggle.addEventListener('click', function(e) {
+      e.preventDefault();
+      if (drawer.classList.contains('open')) {
+        closeDrawer();
+      } else {
+        openDrawer();
+      }
+    });
+    backdrop.addEventListener('click', closeDrawer);
+
+    navLinks.forEach(link => {
+      link.addEventListener('click', function() {
+        closeDrawer();
+      });
+    });
+  });
 
   /**
    * Enhanced scroll with offset on links with a class name .scrollto

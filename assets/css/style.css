@@ -841,13 +841,65 @@ h6 {
 }
 
 @media (max-width: 991px) {
-  .mobile-nav-toggle {
-    display: block;
-  }
-
   .navbar ul {
     display: none;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    right: 0;
+    background: #222;
+    z-index: 9999;
+    padding: 20px 0;
+    margin: 0;
+    border-radius: 0 0 16px 16px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
   }
+  .navbar.show-menu ul {
+    display: block;
+    animation: slideDown 0.3s ease;
+  }
+  .navbar ul li {
+    width: 100%;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+  }
+  .navbar ul li a {
+    display: block;
+    padding: 16px 0;
+    color: #fff;
+    font-size: 18px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    background: none;
+  }
+  .navbar ul li:last-child a {
+    border-bottom: none;
+  }
+  .mobile-nav-toggle {
+    display: block;
+    position: fixed;
+    top: 18px;
+    right: 18px;
+    z-index: 20000;
+    font-size: 32px;
+    color: #fff;
+    background: rgba(34,34,34,0.85);
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    padding: 8px;
+    border-radius: 8px;
+    transition: background 0.2s;
+  }
+  .mobile-nav-toggle:active,
+  .mobile-nav-toggle:focus {
+    background: rgba(176, 118, 181, 0.95);
+    outline: none;
+  }
+}
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 
@@ -3204,4 +3256,57 @@ img {
   .portfolio-container.justify-content-center .portfolio-item {
     max-width: 100%;
   }
+}
+
+/* Side Drawer Styles */
+.side-drawer {
+  position: fixed;
+  top: 0;
+  left: -260px;
+  width: 240px;
+  height: 100%;
+  background: #232323;
+  z-index: 30000;
+  box-shadow: 2px 0 16px rgba(0,0,0,0.18);
+  transition: left 0.3s cubic-bezier(.4,0,.2,1);
+  padding-top: 60px;
+  display: flex;
+  flex-direction: column;
+}
+.side-drawer.open {
+  left: 0;
+}
+.side-drawer ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.side-drawer ul li {
+  border-bottom: 1px solid #333;
+}
+.side-drawer ul li a {
+  display: block;
+  color: #fff;
+  padding: 18px 24px;
+  font-size: 18px;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+.side-drawer ul li a:hover {
+  background: #333;
+}
+.drawer-backdrop {
+  display: none;
+  position: fixed;
+  z-index: 29999;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.4);
+  transition: opacity 0.3s;
+}
+.drawer-backdrop.open {
+  display: block;
+  opacity: 1;
+}
+@media (min-width: 992px) {
+  .side-drawer, .drawer-backdrop, .mobile-nav-toggle { display: none !important; }
 }

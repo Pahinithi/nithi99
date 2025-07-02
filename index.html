@@ -45,6 +45,16 @@
     .work-experience-card .card-text {
       font-size: 1rem; /* Standard text size */
     }
+
+    @media (max-width: 991px) {
+      .navbar ul { display: none; }
+      .navbar.navbar-mobile ul { display: block; }
+      .mobile-nav-toggle { display: block; position: fixed; top: 18px; right: 18px; z-index: 20000; }
+    }
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
   </style>
 
 </head>
@@ -71,13 +81,15 @@
 
       <nav id="navbar" class="navbar">
         <ul>
-          <li><a class="nav-link active" href="#header">Home</a></li>
+          <li><a class="nav-link" href="#header">Home</a></li>
           <li><a class="nav-link" href="#about">About</a></li>
           <li><a class="nav-link" href="#academic-projects">Academic Projects</a></li>
           <li><a class="nav-link" href="#learning-projects">Learning Projects</a></li>
           <li><a class="nav-link" href="#personal-projects">Personal Projects</a></li>
         </ul>
-        <i class="bi bi-list mobile-nav-toggle"></i>
+        <button class="mobile-nav-toggle" aria-label="Open navigation">
+          <span class="bi bi-list"></span>
+        </button>
       </nav><!-- .navbar -->
 
 
@@ -92,6 +104,18 @@
 
     </div>
   </header><!-- End Header -->
+
+  <!-- Side Drawer Menu -->
+  <div id="side-drawer" class="side-drawer">
+    <ul>
+      <li><a class="nav-link" href="#header">Home</a></li>
+      <li><a class="nav-link" href="#about">About</a></li>
+      <li><a class="nav-link" href="#academic-projects">Academic Projects</a></li>
+      <li><a class="nav-link" href="#learning-projects">Learning Projects</a></li>
+      <li><a class="nav-link" href="#personal-projects">Personal Projects</a></li>
+    </ul>
+  </div>
+  <div id="drawer-backdrop" class="drawer-backdrop"></div>
 
   <!-- ======= About Section ======= -->
   <section id="about" class="about" id="main-content">
@@ -2074,6 +2098,53 @@
 
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>
+
+  <!-- Hamburger menu toggle -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const navbar = document.getElementById('navbar');
+      const toggle = document.querySelector('.mobile-nav-toggle');
+      const navLinks = document.querySelectorAll('#navbar .nav-link');
+      const icon = toggle.querySelector('span');
+
+      if (toggle && navbar) {
+        toggle.addEventListener('click', function(e) {
+          e.preventDefault();
+          navbar.classList.toggle('show-menu');
+          // Toggle icon between bars and X
+          if (navbar.classList.contains('show-menu')) {
+            icon.classList.remove('bi-list');
+            icon.classList.add('bi-x');
+          } else {
+            icon.classList.remove('bi-x');
+            icon.classList.add('bi-list');
+          }
+        });
+      }
+
+      navLinks.forEach(link => {
+        link.addEventListener('click', function() {
+          if (navbar.classList.contains('show-menu')) {
+            navbar.classList.remove('show-menu');
+            icon.classList.remove('bi-x');
+            icon.classList.add('bi-list');
+          }
+        });
+      });
+
+      document.addEventListener('click', function(e) {
+        if (
+          navbar.classList.contains('show-menu') &&
+          !navbar.contains(e.target) &&
+          !toggle.contains(e.target)
+        ) {
+          navbar.classList.remove('show-menu');
+          icon.classList.remove('bi-x');
+          icon.classList.add('bi-list');
+        }
+      });
+    });
+  </script>
 
 </body>
 
