@@ -39,23 +39,61 @@
    * Scrolls to an element with header offset
    */
   const scrollto = (el) => {
+    const header = select('#header')
+    const offset = header.offsetHeight
+
+    const elementPos = select(el).offsetTop
     window.scrollTo({
-      top: 0,
+      top: elementPos - offset,
       behavior: 'smooth'
     })
   }
 
   /**
-   * Mobile nav toggle
+   * Enhanced Mobile nav toggle with better UX
    */
   on('click', '.mobile-nav-toggle', function(e) {
-    select('#navbar').classList.toggle('navbar-mobile')
+    e.preventDefault()
+    const navbar = select('#navbar')
+    const body = document.body
+    
+    // Toggle mobile nav
+    navbar.classList.toggle('navbar-mobile')
+    body.classList.toggle('mobile-nav-active')
+    
+    // Toggle icon
     this.classList.toggle('bi-list')
     this.classList.toggle('bi-x')
+    
+    // Prevent body scroll when mobile nav is open
+    if (navbar.classList.contains('navbar-mobile')) {
+      body.style.overflow = 'hidden'
+    } else {
+      body.style.overflow = ''
+    }
   })
 
   /**
-   * Scrool with ofset on links with a class name .scrollto
+   * Close mobile nav when clicking outside
+   */
+  document.addEventListener('click', function(e) {
+    const navbar = select('#navbar')
+    const mobileToggle = select('.mobile-nav-toggle')
+    
+    if (navbar.classList.contains('navbar-mobile') && 
+        !navbar.contains(e.target) && 
+        !mobileToggle.contains(e.target)) {
+      navbar.classList.remove('navbar-mobile')
+      document.body.classList.remove('mobile-nav-active')
+      document.body.style.overflow = ''
+      
+      mobileToggle.classList.remove('bi-x')
+      mobileToggle.classList.add('bi-list')
+    }
+  })
+
+  /**
+   * Enhanced scroll with offset on links with a class name .scrollto
    */
   on('click', '#navbar .nav-link', function(e) {
     let section = select(this.hash)
@@ -73,11 +111,15 @@
 
       this.classList.add('active')
 
+      // Close mobile nav when clicking a link
       if (navbar.classList.contains('navbar-mobile')) {
         navbar.classList.remove('navbar-mobile')
+        document.body.classList.remove('mobile-nav-active')
+        document.body.style.overflow = ''
+        
         let navbarToggle = select('.mobile-nav-toggle')
-        navbarToggle.classList.toggle('bi-list')
-        navbarToggle.classList.toggle('bi-x')
+        navbarToggle.classList.remove('bi-x')
+        navbarToggle.classList.add('bi-list')
       }
 
       if (this.hash == '#header') {
@@ -107,6 +149,17 @@
       scrollto(this.hash)
     }
   }, true)
+
+  /**
+   * Smooth scroll for all internal links
+   */
+  on('click', 'a[href^="#"]', function(e) {
+    const href = this.getAttribute('href')
+    if (href !== '#' && href !== '#header') {
+      e.preventDefault()
+      scrollto(href)
+    }
+  })
 
   /**
    * Activate/show sections on load with hash links
@@ -139,26 +192,53 @@
   });
 
   /**
-   * Skills animation
+   * Enhanced Skills animation with intersection observer
    */
-  let skilsContent = select('.skills-content');
-  if (skilsContent) {
-    new Waypoint({
-      element: skilsContent,
-      offset: '80%',
-      handler: function(direction) {
-        let progress = select('.progress .progress-bar', true);
-        progress.forEach((el) => {
-          el.style.width = el.getAttribute('aria-valuenow') + '%'
-        });
-      }
-    })
+  const skillsContent = select('.skills-content');
+  if (skillsContent) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          let progress = select('.progress .progress-bar', true);
+          progress.forEach((el) => {
+            el.style.width = el.getAttribute('aria-valuenow') + '%'
+          });
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.8 });
+    
+    observer.observe(skillsContent);
   }
 
   /**
-   * Testimonials slider
+   * Enhanced About section animations
    */
-  new Swiper('.testimonials-slider', {
+  const aboutSection = select('#about');
+  if (aboutSection) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          // Animate resume items
+          let resumeItems = select('.resume .resume-item', true);
+          resumeItems.forEach((item, index) => {
+            setTimeout(() => {
+              item.style.opacity = '1';
+              item.style.transform = 'translateY(0)';
+            }, index * 300);
+          });
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.8 });
+    
+    observer.observe(aboutSection);
+  }
+
+  /**
+   * Enhanced Testimonials slider with better mobile support
+   */
+  const testimonialsSlider = new Swiper('.testimonials-slider', {
     speed: 600,
     loop: true,
     autoplay: {
@@ -176,60 +256,92 @@
         slidesPerView: 1,
         spaceBetween: 20
       },
-
+      768: {
+        slidesPerView: 2,
+        spaceBetween: 30
+      },
       1200: {
         slidesPerView: 3,
-        spaceBetween: 20
+        spaceBetween: 30
       }
     }
   });
 
   /**
-   * Porfolio isotope and filter
+   * Enhanced Portfolio isotope and filter with better mobile support
    */
   window.addEventListener('load', () => {
-    let portfolioContainer = select('.portfolio-container');
-    if (portfolioContainer) {
-      let portfolioIsotope = new Isotope(portfolioContainer, {
+    // Academic Projects Portfolio
+    let academicPortfolioContainer = select('#academic-projects .portfolio-container');
+    if (academicPortfolioContainer) {
+      let academicPortfolioIsotope = new Isotope(academicPortfolioContainer, {
         itemSelector: '.portfolio-item',
-        layoutMode: 'fitRows'
+        layoutMode: 'fitRows',
+        transitionDuration: '0.4s'
       });
 
-      let portfolioFilters = select('#portfolio-flters li', true);
+      let academicPortfolioFilters = select('#portfolio-flters li', true);
 
       on('click', '#portfolio-flters li', function(e) {
         e.preventDefault();
-        portfolioFilters.forEach(function(el) {
+        academicPortfolioFilters.forEach(function(el) {
           el.classList.remove('filter-active');
         });
         this.classList.add('filter-active');
 
-        portfolioIsotope.arrange({
+        academicPortfolioIsotope.arrange({
           filter: this.getAttribute('data-filter')
         });
       }, true);
     }
 
+    // Learning Projects Portfolio
+    let learningPortfolioContainer = select('#learning-projects .portfolio-container');
+    if (learningPortfolioContainer) {
+      let learningPortfolioIsotope = new Isotope(learningPortfolioContainer, {
+        itemSelector: '.portfolio-item',
+        layoutMode: 'fitRows',
+        transitionDuration: '0.4s'
+      });
+
+      let learningPortfolioFilters = select('#learning-projects-flters li', true);
+
+      on('click', '#learning-projects-flters li', function(e) {
+        e.preventDefault();
+        learningPortfolioFilters.forEach(function(el) {
+          el.classList.remove('filter-active');
+        });
+        this.classList.add('filter-active');
+
+        learningPortfolioIsotope.arrange({
+          filter: this.getAttribute('data-filter')
+        });
+      }, true);
+    }
   });
 
   /**
-   * Initiate portfolio lightbox 
+   * Enhanced portfolio lightbox with mobile optimizations
    */
   const portfolioLightbox = GLightbox({
-    selector: '.portfolio-lightbox'
+    selector: '.portfolio-lightbox',
+    touchNavigation: true,
+    loop: true,
+    autoplayVideos: true
   });
 
   /**
-   * Initiate portfolio details lightbox 
+   * Enhanced portfolio details lightbox
    */
   const portfolioDetailsLightbox = GLightbox({
     selector: '.portfolio-details-lightbox',
     width: '90%',
-    height: '90vh'
+    height: '90vh',
+    touchNavigation: true
   });
 
   /**
-   * Portfolio details slider
+   * Enhanced Portfolio details slider
    */
   new Swiper('.portfolio-details-slider', {
     speed: 400,
@@ -242,12 +354,57 @@
       el: '.swiper-pagination',
       type: 'bullets',
       clickable: true
+    },
+    breakpoints: {
+      320: {
+        slidesPerView: 1,
+        spaceBetween: 20
+      },
+      768: {
+        slidesPerView: 2,
+        spaceBetween: 30
+      }
     }
   });
 
   /**
-   * Initiate Pure Counter 
+   * Initiate Pure Counter with intersection observer
    */
-  new PureCounter();
+  const counters = select('.purecounter', true);
+  if (counters.length) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          new PureCounter().start();
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+    
+    counters.forEach(counter => observer.observe(counter));
+  }
+
+  /**
+   * Add loading states for better UX
+   */
+  window.addEventListener('load', () => {
+    document.body.classList.add('loaded');
+  });
+
+  /**
+   * Handle window resize for responsive behavior
+   */
+  window.addEventListener('resize', () => {
+    const navbar = select('#navbar');
+    if (window.innerWidth > 991 && navbar.classList.contains('navbar-mobile')) {
+      navbar.classList.remove('navbar-mobile');
+      document.body.classList.remove('mobile-nav-active');
+      document.body.style.overflow = '';
+      
+      const navbarToggle = select('.mobile-nav-toggle');
+      navbarToggle.classList.remove('bi-x');
+      navbarToggle.classList.add('bi-list');
+    }
+  });
 
 })()
