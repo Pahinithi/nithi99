@@ -50,48 +50,6 @@
   }
 
   /**
-   * Hamburger menu toggle (robust, works on all pages)
-   */
-  document.addEventListener('DOMContentLoaded', function() {
-    const drawer = document.getElementById('side-drawer');
-    const backdrop = document.getElementById('drawer-backdrop');
-    const toggle = document.querySelector('.mobile-nav-toggle');
-    const icon = toggle.querySelector('span');
-    const navLinks = drawer.querySelectorAll('.nav-link');
-
-    function openDrawer() {
-      drawer.classList.add('open');
-      backdrop.classList.add('open');
-      icon.classList.remove('bi-list');
-      icon.classList.add('bi-x');
-      document.body.style.overflow = 'hidden';
-    }
-    function closeDrawer() {
-      drawer.classList.remove('open');
-      backdrop.classList.remove('open');
-      icon.classList.remove('bi-x');
-      icon.classList.add('bi-list');
-      document.body.style.overflow = '';
-    }
-
-    toggle.addEventListener('click', function(e) {
-      e.preventDefault();
-      if (drawer.classList.contains('open')) {
-        closeDrawer();
-      } else {
-        openDrawer();
-      }
-    });
-    backdrop.addEventListener('click', closeDrawer);
-
-    navLinks.forEach(link => {
-      link.addEventListener('click', function() {
-        closeDrawer();
-      });
-    });
-  });
-
-  /**
    * Enhanced scroll with offset on links with a class name .scrollto
    */
   on('click', '#navbar .nav-link', function(e) {
@@ -427,6 +385,20 @@
       const navbarToggle = select('.mobile-nav-toggle');
       navbarToggle.classList.remove('bi-x');
       navbarToggle.classList.add('bi-list');
+    }
+  });
+
+  // Auto-close mobile nav menu when a link is clicked (for checkbox hack)
+  document.addEventListener('DOMContentLoaded', function() {
+    var mobileNavToggle = document.getElementById('mobile-nav-toggle');
+    var mobileNav = document.getElementById('mobile-nav');
+    if (mobileNavToggle && mobileNav) {
+      var links = mobileNav.querySelectorAll('a');
+      links.forEach(function(link) {
+        link.addEventListener('click', function() {
+          mobileNavToggle.checked = false;
+        });
+      });
     }
   });
 
