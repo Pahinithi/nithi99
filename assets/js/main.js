@@ -392,12 +392,19 @@
   document.addEventListener('DOMContentLoaded', function() {
     var mobileNavToggle = document.getElementById('mobile-nav-toggle');
     var mobileNav = document.getElementById('mobile-nav');
+    var mobileNavBackdrop = document.querySelector('.mobile-nav-backdrop');
     if (mobileNavToggle && mobileNav) {
       var links = mobileNav.querySelectorAll('a');
       links.forEach(function(link) {
         link.addEventListener('click', function() {
           mobileNavToggle.checked = false;
         });
+      });
+    }
+    // Close menu when clicking the backdrop
+    if (mobileNavToggle && mobileNavBackdrop) {
+      mobileNavBackdrop.addEventListener('click', function() {
+        mobileNavToggle.checked = false;
       });
     }
   });
